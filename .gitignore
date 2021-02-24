@@ -33,3 +33,6 @@
 # Ignore README while I add in-progress notes
 README.md
 to_do.md
+
+# Ignore coverage files (SimpleCov)
+/coverage

@@ -48,19 +48,30 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
           }.to change { Search.count }.by(1)
 
           search = Search.last
-          json = file_fixture('one_incident.json').read.rstrip
+          expected_json = file_fixture('one_incident.json').read.rstrip
 
           expect(search.params[:zipcode]).to eq(80401)
-          expect(search.response_json).to eq(json)
+          expect(search.response_json).to eq(expected_json)
         end
 
-        it 'does not create a new Search object if an existing object with the same :zipcode was recently created (last 2 days)' do
-          search = create(:search, :one_incident)
+        it 'does not create a new Search object if an existing object with the same :zipcode was created in the last 48 hours' do
+          search = create(:search, :one_incident, created_at: 47.hours.ago)
 
           expect {
-            get '/api/v1/incidents', params: { zipcode: 80401 }
+            get '/api/v1/incidents', params: { zipcode: search.params[:zipcode] }
           }.to_not change { Search.count }
 
+          expect(Search.last).to eq(search)
+        end
+
+        it 'creates a new Search object if an existing object with the same :zipcode was created more than 48 ago' do
+          search = create(:search, :one_incident, created_at: 49.hours.ago)
+
+          expect {
+            get '/api/v1/incidents', params: { zipcode: search.params[:zipcode] }
+          }.to change { Search.count }.by(1)
+
+          expect(Search.last).to_not eq(search)
         end
       end
     end

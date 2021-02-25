@@ -7,7 +7,14 @@ class BikeWiseService
   end
 
   def incidents_json
-    get_incidents.body
+    response = get_incidents
+
+    unless response.status == 200
+      { incidents: [] }.to_json
+    else
+      get_incidents.body
+    end
+
   end
 
   private

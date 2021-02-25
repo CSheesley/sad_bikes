@@ -11,17 +11,37 @@ class Api::V1::IncidentsController < ApplicationController
   private
 
   def validate_params
+    @errors = []
+
     validate_zipcode
+    validate_sort_date_by
+
+    render_errors
   end
 
   def validate_zipcode
     return if zipcode_is_valid?
-    render status: 422, json: { errors: ":zipcode param must be 5 digits, and only include numbers"}
+    @errors << ":zipcode param must be 5 digits, and only include numbers"
   end
 
   def zipcode_is_valid?
     zipcode = search_params[:zipcode]
     (00501..99950).include?(zipcode.to_i)
+  end
+
+  def validate_sort_date_by
+    return if (search_params[:sort_date_by].nil? || sort_date_by_is_valid?)
+    @errors << ":sort_date_by param must be either 'asc' or 'desc'"
+  end
+
+  def sort_date_by_is_valid?
+    sort_param = search_params[:sort_date_by]
+    ["asc", "desc"].include?(sort_param.downcase)
+  end
+
+  def render_errors
+    return unless @errors.present?
+    render status: 422, json: { errors: @errors }
   end
 
   def find_or_create_search

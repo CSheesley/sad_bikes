@@ -146,28 +146,39 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
         get '/api/v1/incidents', params: { zipcode: "20" }
         parsed = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(422)
-        expect(parsed[:errors]).to eq(":zipcode param must be 5 digits, and only include numbers")
+        expect(parsed[:errors]).to match_array([":zipcode param must be 5 digits, and only include numbers"])
 
         # too long
         get '/api/v1/incidents', params: { zipcode: "123456789" }
         parsed = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(422)
-        expect(parsed[:errors]).to eq(":zipcode param must be 5 digits, and only include numbers")
+        expect(parsed[:errors]).to match_array([":zipcode param must be 5 digits, and only include numbers"])
 
         # those aren't numbers
         get '/api/v1/incidents', params: { zipcode: "bananas" }
         parsed = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(422)
-        expect(parsed[:errors]).to eq(":zipcode param must be 5 digits, and only include numbers")
+        expect(parsed[:errors]).to match_array([":zipcode param must be 5 digits, and only include numbers"])
 
         # missing altogether
         get '/api/v1/incidents', params: { }
         parsed = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(422)
-        expect(parsed[:errors]).to eq(":zipcode param must be 5 digits, and only include numbers")
+        expect(parsed[:errors]).to match_array([":zipcode param must be 5 digits, and only include numbers"])
       end
 
-      xit 'returns an error status and message - invalid :sort_date_by' do
+      it 'returns an error status and message - invalid :sort_date_by' do
+        # is not 'asc' or 'desc'
+        get '/api/v1/incidents', params: { zipcode: "80038", sort_date_by: "aBc" }
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(422)
+        expect(parsed[:errors]).to match_array([":sort_date_by param must be either 'asc' or 'desc'"])
+
+        # also is not 'asc' or 'desc'
+        get '/api/v1/incidents', params: { zipcode: "80038", sort_date_by: "123" }
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(422)
+        expect(parsed[:errors]).to match_array([":sort_date_by param must be either 'asc' or 'desc'"])
       end
 
       it 'returns an error status and message - invalid :type' do

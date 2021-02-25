@@ -29,12 +29,32 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
         expect(parsed).to eq(expected_body)
       end
 
-      it 'can sorts the results from newest to oldest by default' do
-        # get '/api/v1/incidents', params: { zipcode:  }
+      it 'sorts the results from newest to oldest by default' do
+        get '/api/v1/incidents', params: { zipcode: 80038 }
+
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expected_json = file_fixture('three_incidents.json').read.rstrip
+
+        response_dates = parsed[:incidents].map { |inc| inc[:date_and_time] }
+        expected_dates = date_strings_appearance_order(expected_json)
+
+        expect(response).to have_http_status(200)
+        expect(response_dates).to eq(expected_dates)
+        expect(response_dates).to eq(["08-27-2020 16:13", "08-01-2020 15:00", "12-04-2017 23:00"])
       end
 
       it 'can sort the results from oldest to newest' do
-        # get '/api/v1/incidents', params: { zipcode: xxxxx, sort: 'desc' }
+        get '/api/v1/incidents', params: { zipcode: 80038, sort_date_by: 'asc' }
+
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expected_json = file_fixture('three_incidents.json').read.rstrip
+
+        response_dates = parsed[:incidents].map { |inc| inc[:date_and_time] }
+        expected_dates = date_strings_appearance_order(expected_json).reverse
+
+        expect(response).to have_http_status(200)
+        expect(response_dates).to eq(expected_dates)
+        expect(response_dates).to eq(["12-04-2017 23:00", "08-01-2020 15:00", "08-27-2020 16:13"])
       end
 
       it 'can filter results based on the incident type' do
@@ -86,6 +106,15 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
     context 'when the external API errors' do
       it '' do
       end
+    end
+  end
+
+  # helpers
+  def date_strings_appearance_order(raw_json)
+    parsed = JSON.parse(raw_json, symbolize_names: true)
+
+    parsed[:incidents].map do |inc|
+      Time.at(inc[:occurred_at]).strftime('%m-%d-%Y %H:%M')
     end
   end
 

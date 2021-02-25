@@ -1,16 +1,16 @@
 class IncidentsSerializer
-  attr_reader :response_json
+  attr_reader :filtered_incidents
 
-  def initialize(search)
-    @response_json = search.response_json
+  def initialize(filtered_incidents)
+    @filtered_incidents = filtered_incidents
   end
 
-  def results
+  def to_hash
     { incidents: serialized_incidents }
   end
 
   def serialized_incidents
-    parsed_json[:incidents].map do |inc|
+    filtered_incidents.map do |inc|
       {
         id: inc[:id],
         type: inc[:type],
@@ -23,10 +23,6 @@ class IncidentsSerializer
         image_url: inc[:media][:image_url]
       }
     end
-  end
-
-  def parsed_json
-    JSON.parse(@response_json, symbolize_names: true)
   end
 
 end

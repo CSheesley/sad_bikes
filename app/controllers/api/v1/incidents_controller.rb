@@ -20,7 +20,7 @@ class Api::V1::IncidentsController < ApplicationController
     }
 
     Search.find_or_create_by(criteria) do |search|
-      search.response_json = BikeWiseService.new(search_params).to_json
+      search.response_json = BikeWiseService.new(search_params).incidents_json
     end
   end
 end

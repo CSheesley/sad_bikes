@@ -48,7 +48,7 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
           }.to change { Search.count }.by(1)
 
           search = Search.last
-          json = file_fixture('no_incidents.json').read.rstrip
+          json = file_fixture('one_incident.json').read.rstrip
 
           expect(search.params[:zipcode]).to eq(80401)
           expect(search.response_json).to eq(json)

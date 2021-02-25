@@ -35,7 +35,7 @@ class IncidentsSearchFilter
   end
 
   def apply_type_filtering(incidents)
-    return unless type.present?
+    return incidents unless type.present?
 
     case
     when type == 'hazard'

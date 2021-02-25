@@ -89,6 +89,20 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
         expect(response_dates).to eq(expected_dates)
         expect(response_dates).to eq(["12-04-2017 23:00", "08-01-2020 15:00", "08-27-2020 16:13"])
       end
+
+      it 'can handle when the :sort_date_by param is not lowercased' do
+        get '/api/v1/incidents', params: { zipcode: "80038", sort_date_by: "AsC" }
+
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        bikewise_json = file_fixture('three_incidents.json').read.rstrip
+
+        response_dates = parsed[:incidents].map { |inc| inc[:date_and_time] }
+        expected_dates = date_strings_appearance_order(bikewise_json).reverse
+
+        expect(response).to have_http_status(200)
+        expect(response_dates).to eq(expected_dates)
+        expect(response_dates).to eq(["12-04-2017 23:00", "08-01-2020 15:00", "08-27-2020 16:13"])
+      end
     end
 
     context 'Filtering' do
@@ -112,6 +126,17 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
         expect(response).to have_http_status(200)
         expect(parsed[:incidents].count).to eq(2)
         expect(response_types).to eq(["Theft", "Theft"])
+      end
+
+      it 'can handle when the :type param is not lowercased' do
+        get '/api/v1/incidents', params: { zipcode: "80402", type: "HaZArD" }
+
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        response_types = parsed[:incidents].map { |inc| inc[:type] }
+
+        expect(response).to have_http_status(200)
+        expect(parsed[:incidents].count).to eq(3)
+        expect(response_types).to eq(["Hazard", "Hazard", "Hazard"])
       end
     end
 

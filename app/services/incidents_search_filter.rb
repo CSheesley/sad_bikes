@@ -25,9 +25,9 @@ class IncidentsSearchFilter
 
   def apply_date_ordering(incidents)
     case
-    when sort_date_by == 'desc'
+    when sort_date_by.downcase == 'desc'
       sorted = incidents.sort_by { |inc| inc[:occurred_at] }.reverse
-    when sort_date_by == 'asc'
+    when sort_date_by.downcase == 'asc'
       sorted = incidents.sort_by { |inc| inc[:occurred_at] }
     end
 
@@ -38,9 +38,9 @@ class IncidentsSearchFilter
     return incidents unless type.present?
 
     case
-    when type == 'hazard'
+    when type.downcase == 'hazard'
       filtered = incidents.select { |inc| inc[:type] == "Hazard" }
-    when type == 'theft'
+    when type.downcase == 'theft'
       filtered = incidents.select { |inc| inc[:type] == "Theft" }
     end
 

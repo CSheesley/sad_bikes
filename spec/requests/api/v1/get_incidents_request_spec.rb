@@ -5,9 +5,30 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
 
     context 'with valid parameters' do
       it 'returns a successful status, with formatted JSON response' do
+
+        get '/api/v1/incidents', params: { zip: 80403 }
+
+        parsed = JSON.parse(response.body)
+        expected_json= {
+          "incidents": [
+            {
+              id: 76603,
+              title: "Stolen 2015 Giant Escape 1(black)",
+              description: "",
+              address: "Denver, CO, 80401",
+              occurred_at: Time.at(1502690400).strftime('%m-%d-%Y %H:%M %Z'),
+              url: "https://bikewise.org/api/v1/incidents/76603",
+              image_url: "https://files.bikeindex.org/uploads/Pu/95863/large_IMG_6792.JPG",
+              type: "Theft",
+            }
+          ]
+        }
+
+        expect(response).to have_http_status(200)
+        expect(parsed).to eq(expected_json)
       end
 
-      it 'can sort the results from newest to oldest' do
+      it 'can sorts the results from newest to oldest by default' do
       end
 
       it 'can sort the results from oldest to newest' do

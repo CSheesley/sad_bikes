@@ -1,4 +1,5 @@
 class Api::V1::IncidentsController < ApplicationController
+  before_action :validate_params, only: [:index]
 
   def index
     search = find_or_create_search
@@ -8,6 +9,20 @@ class Api::V1::IncidentsController < ApplicationController
   end
 
   private
+
+  def validate_params
+    validate_zipcode
+  end
+
+  def validate_zipcode
+    return if zipcode_is_valid?
+    render status: 422, json: { errors: ":zipcode param must be 5 digits, and only include numbers"}
+  end
+
+  def zipcode_is_valid?
+    zipcode = search_params[:zipcode]
+    (00501..99950).include?(zipcode.to_i)
+  end
 
   def find_or_create_search
     Search.find_or_create_by(search_criteria) do |search|

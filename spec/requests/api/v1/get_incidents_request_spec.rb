@@ -142,6 +142,32 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
 
     context 'With invalid params' do
       it 'returns an error status and message - invalid :zipcode' do
+        # too short
+        get '/api/v1/incidents', params: { zipcode: "20" }
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(422)
+        expect(parsed[:errors]).to eq(":zipcode param must be 5 digits, and only include numbers")
+
+        # too long
+        get '/api/v1/incidents', params: { zipcode: "123456789" }
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(422)
+        expect(parsed[:errors]).to eq(":zipcode param must be 5 digits, and only include numbers")
+
+        # those aren't numbers
+        get '/api/v1/incidents', params: { zipcode: "bananas" }
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(422)
+        expect(parsed[:errors]).to eq(":zipcode param must be 5 digits, and only include numbers")
+
+        # missing altogether
+        get '/api/v1/incidents', params: { }
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(422)
+        expect(parsed[:errors]).to eq(":zipcode param must be 5 digits, and only include numbers")
+      end
+
+      xit 'returns an error status and message - invalid :sort_date_by' do
       end
 
       it 'returns an error status and message - invalid :type' do

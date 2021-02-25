@@ -18,7 +18,7 @@ class Api::V1::IncidentsController < ApplicationController
 
   def search_criteria
     {
-      params: { zipcode: search_params[:zipcode].to_i },
+      params: { zipcode: search_params[:zipcode] },
       created_at: 48.hours.ago..0.hours.ago
     }
   end

@@ -6,7 +6,7 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
     context 'with valid parameters' do
       it 'returns a successful status, with formatted JSON response' do
 
-        get '/api/v1/incidents', params: { zipcode: 80401 }
+        get '/api/v1/incidents', params: { zipcode: "80401" }
 
         parsed = JSON.parse(response.body, symbolize_names: true)
         expected_body = {
@@ -30,7 +30,7 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
       end
 
       it 'sorts the results from newest to oldest by default' do
-        get '/api/v1/incidents', params: { zipcode: 80038 }
+        get '/api/v1/incidents', params: { zipcode: "80038" }
 
         parsed = JSON.parse(response.body, symbolize_names: true)
         expected_json = file_fixture('three_incidents.json').read.rstrip
@@ -44,7 +44,7 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
       end
 
       it 'can sort the results from oldest to newest' do
-        get '/api/v1/incidents', params: { zipcode: 80038, sort_date_by: 'asc' }
+        get '/api/v1/incidents', params: { zipcode: "80038", sort_date_by: 'asc' }
 
         parsed = JSON.parse(response.body, symbolize_names: true)
         expected_json = file_fixture('three_incidents.json').read.rstrip
@@ -65,13 +65,13 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
       context 'creating Search objects' do
         it 'creates a new Search object - with a :response_json attribute' do
           expect {
-            get '/api/v1/incidents', params: { zipcode: 80401 }
+            get '/api/v1/incidents', params: { zipcode: "80401" }
           }.to change { Search.count }.by(1)
 
           search = Search.last
           expected_json = file_fixture('one_incident.json').read.rstrip
 
-          expect(search.params[:zipcode]).to eq(80401)
+          expect(search.params[:zipcode]).to eq("80401")
           expect(search.response_json).to eq(expected_json)
         end
 

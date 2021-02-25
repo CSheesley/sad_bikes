@@ -36,7 +36,7 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
         search = Search.last
         expected_json = file_fixture('one_incident.json').read.rstrip
 
-        expect(search.params[:zipcode]).to eq("80401")
+        expect(search.zipcode).to eq("80401")
         expect(search.response_json).to eq(expected_json)
       end
 
@@ -44,7 +44,7 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
         search = create(:search, :one_incident, created_at: 47.hours.ago)
 
         expect {
-          get '/api/v1/incidents', params: { zipcode: search.params[:zipcode] }
+          get '/api/v1/incidents', params: { zipcode: search.zipcode }
         }.to_not change { Search.count }
 
         expect(Search.last).to eq(search)
@@ -54,7 +54,7 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
         search = create(:search, :one_incident, created_at: 49.hours.ago)
 
         expect {
-          get '/api/v1/incidents', params: { zipcode: search.params[:zipcode] }
+          get '/api/v1/incidents', params: { zipcode: search.zipcode }
         }.to change { Search.count }.by(1)
 
         expect(Search.last).to_not eq(search)

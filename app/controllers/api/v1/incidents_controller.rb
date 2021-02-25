@@ -57,14 +57,14 @@ class Api::V1::IncidentsController < ApplicationController
 
   def find_or_create_search
     Search.find_or_create_by(search_criteria) do |search|
-      search.params = search_params
+      search.zipcode = search_params[:zipcode]
       search.response_json = BikeWiseService.new(search_params).incidents_json
     end
   end
 
   def search_criteria
     {
-      params: { zipcode: search_params[:zipcode] },
+      zipcode: search_params[:zipcode],
       created_at: 48.hours.ago..0.hours.ago
     }
   end

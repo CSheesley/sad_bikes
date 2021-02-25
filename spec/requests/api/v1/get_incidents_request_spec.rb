@@ -169,7 +169,7 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
 
       it 'returns an error status and message - invalid :sort_date_by' do
         # is not 'asc' or 'desc'
-        get '/api/v1/incidents', params: { zipcode: "80038", sort_date_by: "aBc" }
+        get '/api/v1/incidents', params: { zipcode: "80038", sort_date_by: "abc" }
         parsed = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(422)
         expect(parsed[:errors]).to match_array([":sort_date_by param must be either 'asc' or 'desc'"])
@@ -182,6 +182,17 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
       end
 
       it 'returns an error status and message - invalid :type' do
+        # is not 'hazard' or 'theft'
+        get '/api/v1/incidents', params: { zipcode: "80038", type: "sale" }
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(422)
+        expect(parsed[:errors]).to match_array([":type param must be either 'hazard' or 'theft'"])
+
+        # also is not 'hazard' or 'theft'
+        get '/api/v1/incidents', params: { zipcode: "80038", type: "parade" }
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(422)
+        expect(parsed[:errors]).to match_array([":type param must be either 'hazard' or 'theft'"])
       end
     end
   end

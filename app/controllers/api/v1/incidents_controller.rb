@@ -15,6 +15,7 @@ class Api::V1::IncidentsController < ApplicationController
 
     validate_zipcode
     validate_sort_date_by
+    validate_type
 
     render_errors
   end
@@ -37,6 +38,16 @@ class Api::V1::IncidentsController < ApplicationController
   def sort_date_by_is_valid?
     sort_param = search_params[:sort_date_by]
     ["asc", "desc"].include?(sort_param.downcase)
+  end
+
+  def validate_type
+    return if(search_params[:type].nil? || type_valid?)
+    @errors << ":type param must be either 'hazard' or 'theft'"
+  end
+
+  def type_valid?
+    type_param = search_params[:type]
+    ["hazard", "theft"].include?(type_param.downcase)
   end
 
   def render_errors

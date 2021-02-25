@@ -1,11 +1,11 @@
 class IncidentsSearchFilter
   attr_reader :params, :response_json, :sort_date_by, :type
 
-  def initialize(search)
-    @params = search[:params]
+  def initialize(search, search_params)
+    @params = search_params
     @response_json = search.response_json
-    @sort_date_by = params[:sort_date_by] || 'desc'
-    @type = params[:type] || nil
+    @sort_date_by = search_params[:sort_date_by] || 'desc'
+    @type = search_params[:type] || nil
   end
 
   def results

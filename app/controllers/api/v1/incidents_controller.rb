@@ -3,8 +3,7 @@ class Api::V1::IncidentsController < ApplicationController
 
   def index
     search = find_or_create_search
-    filtered_incidents = IncidentsSearchFilter.new(search).results
-
+    filtered_incidents = IncidentsSearchFilter.new(search, search_params).results
     render status: 200, json: IncidentsSerializer.new(filtered_incidents).to_hash
   end
 
@@ -27,7 +26,7 @@ class Api::V1::IncidentsController < ApplicationController
 
   def zipcode_is_valid?
     zipcode = search_params[:zipcode]
-    (00501..99950).include?(zipcode.to_i)
+    (00501..99950).include?(zipcode.to_i) # probably a better way to validate
   end
 
   def validate_sort_date_by

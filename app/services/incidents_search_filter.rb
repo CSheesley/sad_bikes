@@ -1,15 +1,17 @@
 class IncidentsSearchFilter
-  attr_reader :params, :response_json, :sort_date_by
+  attr_reader :params, :response_json, :sort_date_by, :type
 
   def initialize(search)
     @params = search[:params]
     @response_json = search.response_json
     @sort_date_by = params[:sort_date_by] || 'desc'
+    @type = params[:type] || nil
   end
 
   def results
     incidents = base_incidents
     incidents = apply_date_ordering(incidents)
+    incidents = apply_type_filtering(incidents)
 
     incidents
   end
@@ -30,6 +32,19 @@ class IncidentsSearchFilter
     end
 
     sorted
+  end
+
+  def apply_type_filtering(incidents)
+    return unless type.present?
+
+    case
+    when type == 'hazard'
+      filtered = incidents.select { |inc| inc[:type] == "Hazard" }
+    when type == 'theft'
+      filtered = incidents.select { |inc| inc[:type] == "Theft" }
+    end
+
+    filtered
   end
 
 end

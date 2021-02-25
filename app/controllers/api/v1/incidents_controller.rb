@@ -24,7 +24,7 @@ class Api::V1::IncidentsController < ApplicationController
   end
 
   def search_params
-    params.permit(:zipcode, :sort_date_by)
+    params.permit(:zipcode, :sort_date_by, :type)
   end
 
 end

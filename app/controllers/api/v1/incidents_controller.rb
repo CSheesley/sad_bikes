@@ -2,10 +2,9 @@ class Api::V1::IncidentsController < ApplicationController
 
   def index
     search = find_or_create_search
-    #filtered  = Service::SearchFilter(search).results
-    #incidents = IncidentsSerializer(search).results
+    #filtered  = Service::SearchFilter.new(search).results
 
-    # render status: :200, json: incidents
+    render status: 200, json: IncidentsSerializer.new(search).results
   end
 
   private
@@ -22,7 +21,7 @@ class Api::V1::IncidentsController < ApplicationController
       created_at: 48.hours.ago..0.hours.ago
     }
   end
-  
+
   def search_params
     params.permit(:zipcode)
   end

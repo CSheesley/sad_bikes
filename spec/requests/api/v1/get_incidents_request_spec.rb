@@ -6,9 +6,9 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
     context 'with valid parameters' do
       it 'returns a successful status, with formatted JSON response' do
 
-        get '/api/v1/incidents', params: { zipcode: 80403 }
+        get '/api/v1/incidents', params: { zipcode: 80401 }
 
-        parsed = JSON.parse(response.body)
+        parsed = JSON.parse(response.body, symbolize_names: true)
         expected_body = {
           incidents: [
             {

@@ -11,26 +11,26 @@ FactoryBot.define do
 
   factory :search do
     # default params passed onto BikeWise API are:
-      # proximity: params[:zip]
+      # proximity: params[:zipcode]
       # proximity_square: 1 (miles?)
 
     trait :no_incidents do
-      params { { zip: 80403 } }
+      params { { zipcode: 80403 } }
       response_json { no_incident_json }
     end
 
     trait :one_incident do # 1 Theft
-      params { { zip: 80401 }}
+      params { { zipcode: 80401 }}
       response_json { one_incident_json }
     end
 
     trait :some_incidents do # 2 Theft, 3 Hazard
-      params { { zip: 80402 } }
+      params { { zipcode: 80402 } }
       response_json { some_incidents_json }
     end
 
     trait :many_incidents do
-      params { { zip: 80228 } } # 21 Thefts
+      params { { zipcode: 80228 } } # 21 Thefts
       response_json { many_incidents_json }
     end
   end

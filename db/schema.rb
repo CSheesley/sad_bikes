@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_24_223924) do
+ActiveRecord::Schema.define(version: 2021_02_26_003239) do
 
   create_table "searches", force: :cascade do |t|
-    t.text "params"
     t.text "response_json"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "zipcode"
   end
 
 end

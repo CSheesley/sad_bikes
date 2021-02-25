@@ -17,7 +17,8 @@ class IncidentsSerializer
         title: inc[:title],
         description: inc[:description],
         address: inc[:address],
-        occurred_at: Time.at(inc[:occurred_at]).strftime('%m-%d-%Y %H:%M %Z'),
+        occurred_at: inc[:occurred_at],
+        date_and_time: Time.at(inc[:occurred_at]).strftime('%m-%d-%Y %H:%M'),
         url: inc[:url],
         image_url: inc[:media][:image_url]
       }

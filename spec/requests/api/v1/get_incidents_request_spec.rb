@@ -17,7 +17,8 @@ RSpec.describe Api::V1::IncidentsController, type: :request do
               title: "Stolen 2015 Giant Escape 1(black)",
               description: "",
               address: "Denver, CO, 80401",
-              occurred_at: Time.at(1502690400).strftime('%m-%d-%Y %H:%M %Z'),
+              occurred_at: 1502690400,
+              date_and_time: Time.at(1502690400).strftime('%m-%d-%Y %H:%M'),
               url: "https://bikewise.org/api/v1/incidents/76603",
               image_url: "https://files.bikeindex.org/uploads/Pu/95863/large_IMG_6792.JPG"
             }

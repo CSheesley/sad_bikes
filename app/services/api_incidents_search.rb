@@ -1,11 +1,16 @@
 class ApiIncidentsSearch
-  attr_reader :search_params
-  attr_accessor :errors
+  attr_reader :search_params, :errors
 
   def initialize(search_params)
     @search_params = search_params
     @errors = []
     validate_params
+  end
+
+  def results
+    search = find_or_create_search
+    filtered_incidents = IncidentsSearchFilter.new(search, search_params).results
+    IncidentsSerializer.new(filtered_incidents).to_hash
   end
 
   def valid?

@@ -13,13 +13,6 @@ class Api::V1::IncidentsController < ApplicationController
 
   private
 
-  # def find_or_create_search
-  #   Search.find_or_create_by(search_criteria) do |search|
-  #     search.zipcode = search_params[:zipcode]
-  #     search.response_json = BikeWiseService.new(search_params).incidents_json
-  #   end
-  # end
-
   def search_params
     params.permit(:zipcode, :sort_date_by, :type)
   end

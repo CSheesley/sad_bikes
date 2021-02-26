@@ -8,7 +8,7 @@ class ApiIncidentsSearch
   end
 
   def results
-    search = find_or_create_search
+    search = Search.find_or_create_by_recent_zip(search_params)
     filtered_incidents = IncidentsSearchFilter.new(search, search_params).results
     IncidentsSerializer.new(filtered_incidents).to_hash
   end
@@ -51,20 +51,6 @@ class ApiIncidentsSearch
   def type_valid?
     type_param = search_params[:type]
     ["hazard", "theft"].include?(type_param.downcase)
-  end
-
-  def find_or_create_search
-    Search.find_or_create_by(search_criteria) do |search|
-      search.zipcode = search_params[:zipcode]
-      search.response_json = BikeWiseService.new(search_params).incidents_json
-    end
-  end
-
-  def search_criteria
-    {
-      zipcode: search_params[:zipcode],
-      created_at: 48.hours.ago..0.hours.ago
-    }
   end
 
 end

@@ -27,6 +27,7 @@ class Api::V1::IncidentsController < ApplicationController
   def zipcode_is_valid?
     zipcode = search_params[:zipcode]
     (zipcode.to_i).between?(00501, 99950)
+  end
 
   def validate_sort_date_by
     return if (search_params[:sort_date_by].nil? || sort_date_by_is_valid?)

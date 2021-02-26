@@ -33,5 +33,5 @@ production:
   encoding: unicode
   database: sad_bikes_production
   pool: 5
-  username:
-  password:
+  username: corey
+  password: password
